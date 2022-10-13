@@ -24,7 +24,7 @@ public class BookRestController {
      */
     @PostMapping()
     public ResponseEntity<String> saveBook(@RequestBody Book book) {
-        ResponseEntity<String> response = null;
+        ResponseEntity<String> response;
         try {
             Long id = bookService.saveBook(book);
             response = new ResponseEntity<String>("Book '" + id + "' created", HttpStatus.CREATED);
@@ -36,11 +36,27 @@ public class BookRestController {
     }
 
     /**
+     * Takes Book Objects as input and returns save Status as ResponseEntity<?>
+     */
+    @PostMapping("/add_some")
+    public ResponseEntity<?> saveSomeBooks(@RequestBody List<Book> books) {
+        ResponseEntity<?> response;
+        try {
+            List<Book> savedBooks = bookService.saveAllBook(books);
+            response = new ResponseEntity<List<Book>>(savedBooks, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response = new ResponseEntity<String>("Unable to save books", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
+    /**
      * To read all Books, returns data retrieval Status as ResponseEntity<?>
      */
     @GetMapping
     public ResponseEntity<?> getAllBooks() {
-        ResponseEntity<?> response = null;
+        ResponseEntity<?> response;
         try {
             List<Book> books = bookService.getAllBooks();
             response = new ResponseEntity<List<Book>>(books, HttpStatus.OK);
@@ -57,7 +73,7 @@ public class BookRestController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> getOneBook(@PathVariable("id") Long id) {
-        ResponseEntity<?> response = null;
+        ResponseEntity<?> response;
         try {
             Book book = bookService.getOneBook(id);
             response = new ResponseEntity<Book>(book, HttpStatus.OK);
@@ -76,7 +92,7 @@ public class BookRestController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBook(@PathVariable("id") Long id) {
-        ResponseEntity<String> response = null;
+        ResponseEntity<String> response;
 
         try {
             bookService.deleteBook(id);
@@ -86,10 +102,28 @@ public class BookRestController {
         } catch (Exception e) {
             e.printStackTrace();
             response = new ResponseEntity<String>(
-                    "Book to delete Invoice", HttpStatus.INTERNAL_SERVER_ERROR);
+                    "Unable to delete Book", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
     }
+
+    /**
+     * To delete some Books by providing List, returns Status as ResponseEntity<String>
+     */
+    @DeleteMapping("/delete_some")
+    public ResponseEntity<?> deleteSomeBooks(@RequestBody List<Book> books) {
+        ResponseEntity<?> response;
+        try {
+            bookService.deleteAll(books);
+            response = new ResponseEntity<List<Book>>(books, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response = new ResponseEntity<String>(
+                    "Unable to delete Book", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
 
     /**
      * To modify one Book by providing id, updates Invoice object & returns Status as ResponseEntity<String>
@@ -97,7 +131,7 @@ public class BookRestController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateBook(@PathVariable("id") Long id,
                                              @RequestBody Book book) {
-        ResponseEntity<String> response = null;
+        ResponseEntity<String> response;
 
         try {
             //db Object
@@ -121,9 +155,9 @@ public class BookRestController {
      * To update one Book just like where clause condition, updates Book object & returns Status as ResponseEntity<String>
      */
     @PatchMapping("/{id}/{code}")
-    public ResponseEntity<String> updateBookCodeById(@PathVariable("{id}") Long id,
+    public ResponseEntity<String> updateBookCodeById(@PathVariable("id") Long id,
                                                      @PathVariable("code") String code) {
-        ResponseEntity<String> response = null;
+        ResponseEntity<String> response;
 
         try {
             bookService.updateBookCodeById(code, id);

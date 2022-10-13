@@ -23,6 +23,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<Book> saveAllBook(List<Book> books) {
+        return bookRepository.saveAll(books);
+    }
+
+    @Override
     public void updateBook(Book book) {
         bookRepository.save(book);
     }
@@ -33,8 +38,9 @@ public class BookServiceImpl implements BookService {
         bookRepository.delete(book);
     }
 
-    public Optional<Book> getSingleBook(Long id) {
-        return bookRepository.findById(id);
+    @Override
+    public void deleteAll(Iterable<? extends Book> entities) {
+        bookRepository.deleteAll(entities);
     }
 
     @Override

@@ -12,6 +12,10 @@ public interface BookService {
     Long saveBook(Book book);
 
     /**
+     * Takes Book Objects as input and returns PK generated
+     */
+    List<Book> saveAllBook(List<Book> books);
+    /**
      * Takes existing Book data as input and updates values
      */
     void updateBook(Book book);
@@ -20,6 +24,11 @@ public interface BookService {
      * Takes PK(ID) as input and deletes Book Object data
      */
     void deleteBook(Long id);
+
+    /**
+     * Takes Book Objects as input and deletes Book Objects data
+     */
+    void deleteAll(Iterable<? extends Book> entities);
 
     /**
      * Takes id as input and returns one row as one object
